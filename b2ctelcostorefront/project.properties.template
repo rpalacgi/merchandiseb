@@ -1,0 +1,35 @@
+# -----------------------------------------------------------------------
+# [y] hybris Platform 
+# 
+# Copyright (c) 2000-2015 hybris AG
+# All rights reserved.
+#  
+# This software is the confidential and proprietary information of hybris 
+# ("Confidential Information"). You shall not disclose such Confidential
+# Information and shall use it only in accordance with the terms of the
+# license agreement you entered into with hybris.
+#
+#  
+# -----------------------------------------------------------------------
+
+# you can put key/value pairs here.
+# Use Config.getParameter(..) to retrieve the values during runtime.
+
+b2ctelcostorefront.key=value
+
+# Specifies the location of the spring context file added automatically to the global platform application context.
+b2ctelcostorefront.application-context=b2ctelcostorefront-spring.xml
+
+yacceleratorstorefront.additionalWebSpringConfigs.b2ctelcostorefront=classpath:/b2ctelcostorefront/web/spring/b2ctelcostorefront-web-spring.xml
+yb2bacceleratorstorefront.additionalWebSpringConfigs.b2ctelcostorefront=classpath:/b2ctelcostorefront/web/spring/b2ctelcostorefront-web-spring.xml
+
+storefront.supportedUiExperienceLevels.electronics=DESKTOP,MOBILE
+storefront.supportedUiExperienceLevels.apparel-uk=DESKTOP,MOBILE
+storefront.supportedUiExperienceLevels.apparel-de=DESKTOP,MOBILE
+storefront.supportedUiExperienceLevels.powertools=DESKTOP
+
+
+b2ctelcostorefront.javascript.paths.desktop=/desktop/common/js/b2ctelcostorefront.js
+b2ctelcostorefront.javascript.paths.mobile=/desktop/common/js/b2ctelcostorefront.js
+b2ctelcostorefront.css.paths.desktop=/desktop/common/css/b2ctelcostorefront.css
+b2ctelcostorefront.css.paths.mobile=/mobile/common/css/b2ctelcostorefront.css

@@ -1,0 +1,51 @@
+$contentCatalog=b2ctelcoContentCatalog
+#$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$jarResourceCms=jar:de.hybris.platform.addons.b2ctelcostorefront.constants.B2ctelcostorefrontConstants&/b2ctelcostorefront/import/cockpit/cmscockpit
+
+#file: /b2ctelcostore/resources/b2ctelcostore/import/coredata/contentCatalogs/b2ctelcoContentCatalog/cms-content.impex
+# Already defined in the file: 
+# $contentCatalog=b2ctelcoContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$addonExtensionName=b2ctelcostorefront
+
+# NOTE: The key attribute here is the frontendTemplateName. 
+# Notice that it starts with "addon:" - this is interpreted by the addon support components to find the correct page inside the addon
+INSERT_UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];name;frontendTemplateName;restrictedPageTypes(code);active[default=true]
+;;MyNewLayoutPageTemplate;My New Page Template;addon:/$addonExtensionName/pages/product/myNewLayoutPage;ContentPage,CategoryPage;
+ 
+# Re-use the contentPage1Template VM layout in cmscockpit
+UPDATE PageTemplate;$contentCV[unique=true];uid[unique=true];velocityTemplate[translator=de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]
+;;MyNewLayoutPageTemplate;$jarResourceCms/structure-view/structure_contentPage1Template.vm
+ 
+# Add the required slots for your page template.
+# Simple Content Page Templates
+INSERT_UPDATE ContentSlotName;name[unique=true];template(uid,$contentCV)[unique=true][default='MyNewLayoutPageTemplate'];validComponentTypes(code);compTypeGroup(code)
+;SiteLogo;;;logo
+;HeaderLinks;;;headerlinks
+;SearchBox;;;searchbox
+;MiniCart;;;minicart
+;NavigationBar;;;navigation
+;Section1;;;wide
+;Section2A;;;narrow
+;Section2B;;;wide
+;Section3;;;wide
+;Footer;;;footer
+;TopHeaderSlot;;;wide
+;BottomHeaderSlot;;;wide
+;PlaceholderContentSlot;;;
+
+INSERT_UPDATE ContentSlotForTemplate;$contentCV[unique=true];uid[unique=true];position[unique=true];pageTemplate(uid,$contentCV)[unique=true][default='MyNewLayoutPageTemplate'];contentSlot(uid,$contentCV)[unique=true];allowOverwrite
+;;SiteLogo-MyNewLayoutPage;SiteLogo;;SiteLogoSlot;true
+;;HomepageLink-MyNewLayoutPage;HomepageNavLink;;HomepageNavLinkSlot;true
+;;NavigationBar-MyNewLayoutPage;NavigationBar;;NavigationBarSlot;true
+;;MiniCart-MyNewLayoutPage;MiniCart;;MiniCartSlot;true
+;;Footer-MyNewLayoutPage;Footer;;FooterSlot;true
+;;HeaderLinks-MyNewLayoutPage;HeaderLinks;;HeaderLinksSlot;true
+;;SearchBox-MyNewLayoutPage;SearchBox;;SearchBoxSlot;true
+;;TopHeaderSlot-MyNewLayoutPage;TopHeaderSlot;;TopHeaderSlot;true
+;;BottomHeaderSlot-MyNewLayoutPage;BottomHeaderSlot;;BottomHeaderSlot;true
+;;PlaceholderContentSlot-MyNewLayoutPage;PlaceholderContentSlot;;PlaceholderContentSlot;true
+
+# NOW UPDATE YOUR PAGES to use your custom template, for example:
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;faq;Frequently Asked Questions FAQ Page;MyNewLayoutPageTemplate;/faq

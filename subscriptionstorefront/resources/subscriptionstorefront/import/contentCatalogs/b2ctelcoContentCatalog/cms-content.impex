@@ -1,0 +1,51 @@
+$contentCatalog=b2ctelcoContentCatalog
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged]
+$jarResourceCms=jar:de.hybris.platform.subscriptionstorefront.constants.SubscriptionstorefrontConstants&/subscriptionstorefront/import/cockpits/cmscockpit/$contentCatalog
+$addonExtensionName=subscriptionstorefront
+ 
+# My Subscriptions Page Preview
+# Here we create a preview of the page for the cms cockpit. 
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;folder(qualifier)[default='images']
+;;subscriptions-preview;SubscriptionsPage.png;$jarResourceCms/SubscriptionsPage.png;image/png;hybris Accelerator;
+
+## Configure page for My Subscriptions / Subscription details / ...
+INSERT_UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);label;defaultPage[default='true'];approvalStatus(code)[default='approved'];homepage[default='false']
+;;subscriptions;Manage My Subscriptions;AccountPageTemplate;/my-account/subscription
+;;subscription;Subscription Details Page;AccountPageTemplate;subscription
+ 
+## here we link the preview image with the page for cmscockpit
+UPDATE ContentPage;$contentCV[unique=true];uid[unique=true];previewImage(code, $contentCV)
+;;subscriptions;subscriptions-preview
+;;subscription;subscription-preview
+ 
+# CMS Link Component for the link on the main account page 
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;&componentRef;target(code)[default='sameWindow']
+;;AccountSubscriptionsLink;AccountSubscriptionsLink;/my-account/subscription;AccountSubscriptionsLink;AccountSubscriptionsLink;
+ 
+# CMS Navigation Nodes (used in the main account page)
+
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef)[mode=append];&nodeRef
+;AccountLeftNavNode;;My Subscriptions;SiteRootNode;AccountSubscriptionsLink;AccountLeftNavNode
+
+# the jsp pages we defined earlier
+INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];name;page;actions(uid,$contentCV);&componentRef
+;;AccountSubscriptionComponent;Account My Subscriptions Component;/WEB-INF/views/addons/$addonExtensionName/desktop/pages/account/accountSubscriptionsPage.jsp;;AccountSubscriptionComponent
+;;AccountSubscriptionDetailsComponent;Account Subscription Component;/WEB-INF/views/addons/$addonExtensionName/desktop/pages/account/accountSubscriptionPage.jsp;;AccountSubscriptionDetailsComponent
+ 
+# the content slots for the Subscriptions list page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV);;;
+;;SideContent-subscriptions;Side Content Slot for My Subscriptions Details;true;AccountLeftNavigationComponent;;;
+;;BodyContent-subscriptions;Body Content Slot for My Subscriptions Details;true;AccountSubscriptionComponent;;;
+...
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='subscriptions'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SideContent-subscriptions;SideContent;;SideContent-subscriptions;;;
+;;BodyContent-subscriptions;BodyContent;;BodyContent-subscriptions;;;
+...
+## Subscription Details page as Content Slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid,$contentCV);;;
+;;SideContent-subscription;Side Content Slot for Subscription Details;true;AccountLeftNavigationComponent;;;
+;;BodyContent-subscription;Body Content Slot for Subscription Details;true;AccountSubscriptionDetailsComponent;;;
+...
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='subscription'];contentSlot(uid,$contentCV)[unique=true];;;
+;;SideContent-subscription;SideContent;;SideContent-subscription;;;
+;;BodyContent-subscription;BodyContent;;BodyContent-subscription;;;

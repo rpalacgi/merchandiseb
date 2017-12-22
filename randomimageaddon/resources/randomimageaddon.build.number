@@ -1,0 +1,9 @@
+#Ant properties
+#Mon Nov 13 09:34:56 CET 2017
+builddate=20171113 0932
+description=randomimageaddon
+name=randomimageaddon
+releasedate=20150915 1445
+vendor=hybris
+version=5.7.0.31
+version.api=5.7.0
